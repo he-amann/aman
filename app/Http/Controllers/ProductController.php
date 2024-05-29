@@ -45,11 +45,11 @@ class ProductController extends Controller
             // 'description'=>"required|min:2|max:1000",
             'discount'=>"required|max:100",
                 ]);
-        $request->validate([
-            'name'=>"required|min:3|max:40",
-            'description'=>"required|min:3|max:40",
+        // $request->validate([
+        //     'name'=>"required|min:3|max:40",
+        //     'description'=>"required|min:3|max:40",
 
-        ]);
+        // ]);
 
         $info=[
             'name'=>$request->name,
