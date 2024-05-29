@@ -12,6 +12,7 @@
            <tr>
               <th>S.No</th>
               <th>product name</th>
+              <th>product category</th>
               <th> price</th>
               <th> description</th>
               <th> discount</th>
@@ -28,7 +29,14 @@
                {{$info['name']}}
                
             </td>
-               
+               <td>
+                  @foreach($info['allcategory'] as $cid)
+
+{{$cid['categoryId']['name']}}                  
+
+
+                  @endforeach
+               </td>
                <td>{{$info['price']}}</td>
                <td>{{$info['description']}}</td>
                <td>{{$info['discount']}}</td>

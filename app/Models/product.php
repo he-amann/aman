@@ -9,4 +9,16 @@ class product extends Model
 {
     use HasFactory;
     protected $fillable=['name','price','description','discount',];
+   
+   
+   
+    public function allcategory()
+    {
+        return $this->hasMany(productcategory::class,'product_id','id');
+    }
+   
+    public function category()
+    {
+        return $this->hasOne(productcategory::class,'product_id','id');
+    }
 }
