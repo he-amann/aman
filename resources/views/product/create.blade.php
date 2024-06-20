@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends("layouts.app")
 @section('content')
 <style>
       .dgrid{
@@ -12,10 +12,10 @@
 @foreach($errors->all() as $e)
     <div class="alert alert-danger">{{$e}}</div>
     @endforeach
-<form method="post" action="/product">
+<form method="post" action="/product" enctype="multipart/form-data">
 @csrf
 <div class="mb-3">
-    <label for="name">cate name</label>
+    <label for="name">categories</label>
     
     <div class="dgrid"> 
     @foreach($cdata as $cinfo)
@@ -44,6 +44,9 @@
 <div class="mb-3">
     <label for="discount">discount </label>
     <input type="text" class="form-control" name="discount" id="discount" required placeholder="enter the discount">
+</div>
+<h4><label for="photo"> Photo:</label></h4>
+    <input type="file" class="form-control" id="photo" multiple name="photo[]" accept="images/*">
 </div>
 <div class="mb-3">
 <div class="mb-3 text-center">

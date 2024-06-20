@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\category;
 use App\Models\product;
 use App\Models\productcategory;
+use App\Models\productmedia;
 use Illuminate\Http\Request;
+
 class ProductController extends Controller
 {
     /**
@@ -25,9 +29,12 @@ class ProductController extends Controller
     public function create()
     {
         //
-        $cdata=category::all('id','name');
-        return view('product.create',compact('cdata'));
-    }
+         //
+         $cdata=category::all('id','name');
+         return view('product.create',compact('cdata'));
+     }
+ 
+    
 
     /**
      * Store a newly created resource in storage.
@@ -37,20 +44,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
-         //
-         $request->validate([
-            'name'=>"required|min:2|max:100",
-            'price'=>"required|min:2|max:100",
-            // 'description'=>"required|min:2|max:1000",
-            'discount'=>"required|max:100",
-                ]);
-        // $request->validate([
-        //     'name'=>"required|min:3|max:40",
-        //     'description'=>"required|min:3|max:40",
-
-        // ]);
-
+        
         $info=[
             'name'=>$request->name,
             'price'=>$request->price,
@@ -58,10 +52,11 @@ class ProductController extends Controller
             'discount'=>$request->discount,
 
         ];
-        
         $obj=product::create($info);
-        if(count($request->category_id)>0){
-            foreach($request->category_id as $cid){
+        if(count($request->category_id)>0)
+        {
+            foreach($request->category_id as $cid)
+            {
                 $pcinfo=[
                     'category_id'=>$cid,
                     'product_id'=>$obj->id
@@ -69,55 +64,89 @@ class ProductController extends Controller
                 productcategory::create($pcinfo);
             }
         }
-        return redirect('/product')-> with('grt','data saved');
+    foreach($request->photo as $image)
+    {
+        $filename=[];
+        $imgname=$image->getclientOriginalName();
+        $image->move(public_path('photo'),$imgname);
+        //$filename[]=$imgname;
+        $isave=[
+            'image'=>$imgname,
+            'product_id'=>$obj->id,
+        ];
+        productmedia::create($isave);
     }
+    return redirect('/product');
     }
+
+
+
+        
+
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\product  $product
+     * @param  int  $id
      * @return \Illuminate\Http\Response
-   */
-//     public function show(product $product)
-//     {
-//         //
-//     }
+     */
+    public function show($id)
+    {
+        //
+        
+    }
 
-//     /**
-//      * Show the form for editing the specified resource.
-//      *
-//      * @param  \App\Models\product  $product
-//      * @return \Illuminate\Http\Response
-//      */
-//     public function edit(product $product)
-//     {
-//         //
-//     }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(product $product)
+    {
+        //
+        // return view('/product',['data'=>product::all()]);
+         //
+         $catagory=array_column($product->allcategory->toarray(),'category_id');
+         return view('product.edit',['info'=>$product,'cdata'=>category::all(['id','name']),'category'=>$catagory]);
+    }
 
-//     /**
-//      * Update the specified resource in storage.
-//      *
-//      * @param  \Illuminate\Http\Request  $request
-//      * @param  \App\Models\product  $product
-//      * @return \Illuminate\Http\Response
-//      */
-//     public function update(Request $request, product $product)
-//     {
-//         //
-//     }
-
-//     /**
-//      * Remove the specified resource from storage.
-//      *
-//      * @param  \App\Models\product  $product
-//      * @return \Illuminate\Http\Response
-//      */
-//     public function destroy(product $product)
-//     {
-//         //
-//     }
-// }
-
-
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Product $product)
+    {
+        //
+        $product->name=$request->name;
+        $product->price=$request->price;
+        $product->description=$request->description;
+        $product->discount=$request->discount;
+        $product->Save();
+        return redirect('/product')->with('grt','Data Updated Successfully');
+    }
     
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(product $product)
+    {
+    $product->find($product->{'id'})->delete();
+    return redirect('/product')->with('grt, data deleted successfully');
+    }
+    public function imagedelete($id)
+    {
+       $img=productmedia::find($id);
+      // unlink("photo/".$img['image']);
+       $img->delete();
+    }
+
+
+}

@@ -2,8 +2,13 @@
 
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\addtocart;
+
 use \App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\cardController;
+use App\Http\Controllers\CardController as ControllersCardController;
+use App\Http\Controllers\CardControllerController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -20,9 +25,22 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return view('welcome');
 });
-route::resource('/category',CategoryController::class);
-route::resource('/product',ProductController::class);
+route::middleware('auth')->group(function(){
+    Route::resource('/category',CategoryController::class);
+    Route::resource('/product',ProductController::class);
+    Route::get('/deleteimg/{id}',[ProductController::class,'imagedelete']);
+    Route::get('/home', [App\Http\Controllers\ProductController::class, 'index'])->name('home');
+  //  Route::resource('/user/home',cardController::class);
+   Route::resource('/user',CardController::class);
+   Route::get('/products/{product}', 'ProductController@show')->name('products.show');
+   Route::get('/productpag/{id}',[cardController::class,'productpag']);
+   Route::resource('/addtocart',addtocart::class);
+   
+
+
+});
+
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

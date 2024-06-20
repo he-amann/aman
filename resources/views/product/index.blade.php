@@ -7,6 +7,7 @@
     <div class="alter alter-success text-center">
         {{$gt}}
     @endif
+    <a href="/product/create" class="btn btn-primary">New Product</a>
     <table class="table table-striped">
      <thead>
            <tr>
@@ -16,6 +17,7 @@
               <th> price</th>
               <th> description</th>
               <th> discount</th>
+              <th> Final Price</th>
               <th>edit</th>
               <th>delete</th>
            </tr>
@@ -40,12 +42,13 @@
                <td>{{$info['price']}}</td>
                <td>{{$info['description']}}</td>
                <td>{{$info['discount']}}</td>
+               <td>{{$info['price']-($info['price']*($info['discount']/100))}}</td>
                <td>
-               <a href="/category/{{$info['id']}}/edit"> 
+               <a href="/product/{{$info['id']}}/edit"> 
              <button class="btn btn-success"> edit</button>
              </a></td>
             <td>
-              <form method="post" action="/category/{{$info['id']}}">
+              <form method="post" action="/product/{{$info['id']}}">
               @csrf    
               @method('delete')
                   <button class="btn btn-danger" onclick="return confirm('do you really delete')">delete</button>
