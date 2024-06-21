@@ -23,7 +23,7 @@
                 <li><a href="">News</a></li>
                 <li><a href="">About</a></li>
                 <li><a href="">Contact Us</a></li>
-                <li><a href="">our Team</a></li>
+                <li><a href="">Our Team</a></li>
             </ul>
         </div>
         
